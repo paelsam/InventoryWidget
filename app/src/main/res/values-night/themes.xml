@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.InventoryWidget" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/toolbar_gray</item>
+        <item name="android:navigationBarColor">@color/dark_background</item>
+    </style>
+</resources>

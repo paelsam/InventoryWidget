@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <!-- Login Fragment -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.paelsam.inventorywidget.ui.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Home Fragment (Lista de productos) -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.paelsam.inventorywidget.ui.home.HomeFragment"
+        android:label="Inventario"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+    <!-- Add Product Fragment -->
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="com.paelsam.inventorywidget.ui.addproduct.AddProductFragment"
+        android:label="Agregar Producto"
+        tools:layout="@layout/fragment_add_product" />
+
+    <!-- Detail Fragment -->
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.paelsam.inventorywidget.ui.detail.DetailFragment"
+        android:label="Detalle del Producto"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="productCode"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_detailFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
+
+    <!-- Edit Product Fragment -->
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="com.paelsam.inventorywidget.ui.edit.EditProductFragment"
+        android:label="Editar Producto"
+        tools:layout="@layout/fragment_edit_product">
+        <argument
+            android:name="productCode"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>
