@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">InventoryWidget</string>
+    <string name="widget_inventory_label">Inventory</string>
+    <string name="widget_question">¿Cuánto tengo de inventario?</string>
+    <string name="widget_eye_icon_description">Ver saldo del inventario</string>
 </resources>

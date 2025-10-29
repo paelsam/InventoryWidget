@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="180dp"
+    android:background="@drawable/widget_background"
+    android:padding="16dp">
+
+    <!-- Logo en parte superior izquierda -->
+    <ImageView
+        android:id="@+id/widget_logo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerInside" />
+
+    <!-- Texto "Inventory" debajo del logo -->
+    <TextView
+        android:id="@+id/widget_inventory_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_logo"
+        android:layout_alignStart="@id/widget_logo"
+        android:text="@string/widget_inventory_label"
+        android:textColor="@color/primary_orange"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp" />
+
+    <!-- Texto "¿Cuánto tengo de inventario?" en parte superior derecha -->
+    <TextView
+        android:id="@+id/widget_question_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/widget_logo"
+        android:text="@string/widget_question"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:gravity="end"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="40dp" />
+
+    <!-- Ícono de ojo en parte superior derecha -->
+    <ImageView
+        android:id="@+id/widget_eye_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_eye_open"
+        android:contentDescription="@string/widget_eye_icon_description"
+        android:scaleType="centerInside"
+        android:tint="@color/white" />
+
+    <!-- Zona de saldo (con asteriscos por defecto) -->
+    <FrameLayout
+        android:id="@+id/widget_balance_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_inventory_label"
+        android:layout_alignStart="@id/widget_inventory_label"
+        android:layout_toStartOf="@id/widget_eye_icon"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/widget_balance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$****"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace" />
+
+    </FrameLayout>
+
+</RelativeLayout>

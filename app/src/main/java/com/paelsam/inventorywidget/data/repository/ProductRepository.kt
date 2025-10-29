@@ -1,5 +1,7 @@
 package com.paelsam.inventorywidget.data.repository
 
+import android.content.Context
+import com.paelsam.inventorywidget.data.local.AppDatabase
 import com.paelsam.inventorywidget.data.local.ProductDao
 import com.paelsam.inventorywidget.data.model.Product
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +11,8 @@ import kotlinx.coroutines.flow.Flow
  * Actúa como intermediario entre el ViewModel y el DAO
  * En MVVM, los ViewModels solo interactúan con Repositories, nunca directamente con DAOs
  */
-class ProductRepository(private val productDao: ProductDao) {
+class ProductRepository(context: Context) {
+    private val productDao: ProductDao = AppDatabase.getDatabase(context).productDao()
     
     /**
      * Obtiene todos los productos como Flow para observar cambios
