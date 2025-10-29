@@ -19,7 +19,9 @@ class AddProductFragment : Fragment() {
     private var _binding: FragmentAddProductBinding? = null
     private val binding get() = _binding!!
     
-    private val viewModel: AddProductViewModel by viewModels()
+    private val viewModel: AddProductViewModel by viewModels {
+        AddProductViewModelFactory(requireActivity().application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
