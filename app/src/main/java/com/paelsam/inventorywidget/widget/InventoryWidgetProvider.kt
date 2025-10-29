@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 class InventoryWidgetProvider : AppWidgetProvider() {
 
@@ -77,55 +78,69 @@ class InventoryWidgetProvider : AppWidgetProvider() {
                 if (eyeIsOpen) R.drawable.ic_eye_open else R.drawable.ic_eye_closed
             )
 
-            // Cargar datos del inventario desde la base de datos
-            val repository = ProductRepository(context)
-            CoroutineScope(Dispatchers.Main).launch {
+            // Configurar el click listener para el ojo
+            val eyeIntent = Intent(context, InventoryWidgetProvider::class.java).apply {
+                action = ACTION_TOGGLE_EYE
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+            val eyePendingIntent = android.app.PendingIntent.getBroadcast(
+                context,
+                appWidgetId,
+                eyeIntent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widget_eye_icon, eyePendingIntent)
+
+            // Configurar el click listener para "Gestionar Inventario"
+            val appIntent = Intent(context, InventoryWidgetProvider::class.java).apply {
+                action = ACTION_OPEN_APP
+            }
+            val appPendingIntent = android.app.PendingIntent.getBroadcast(
+                context,
+                appWidgetId + 1000,
+                appIntent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widget_manage_container, appPendingIntent)
+
+            // Actualizar el widget inmediatamente con la información inicial
+            if (eyeIsOpen) {
+                views.setTextViewText(R.id.widget_balance_text, "$****")
+            } else {
+                views.setTextViewText(R.id.widget_balance_text, "$****")
+            }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+
+            // Cargar datos del inventario desde la base de datos en un hilo de fondo
+            thread(start = true) {
                 try {
-                    val totalInventory = repository.totalInventoryValue.first()
-                    
-                    // Actualizar el widget con el saldo o asteriscos basado en el estado del ojo
-                    if (eyeIsOpen) {
-                        if (totalInventory != null && totalInventory > 0) {
-                            views.setTextViewText(
-                                R.id.widget_balance_text,
-                                String.format("$%.2f", totalInventory)
-                            )
-                        } else {
-                            views.setTextViewText(R.id.widget_balance_text, "$0.00")
+                    val repository = ProductRepository(context)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        try {
+                            val totalInventory = repository.totalInventoryValue.first()
+                            
+                            // Actualizar el widget con el saldo o asteriscos basado en el estado del ojo
+                            if (eyeIsOpen) {
+                                if (totalInventory != null && totalInventory > 0) {
+                                    views.setTextViewText(
+                                        R.id.widget_balance_text,
+                                        String.format("$%.2f", totalInventory)
+                                    )
+                                } else {
+                                    views.setTextViewText(R.id.widget_balance_text, "$0.00")
+                                }
+                            } else {
+                                views.setTextViewText(R.id.widget_balance_text, "$****")
+                            }
+                            
+                            appWidgetManager.updateAppWidget(appWidgetId, views)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    } else {
-                        views.setTextViewText(R.id.widget_balance_text, "$****")
                     }
                 } catch (e: Exception) {
-                    views.setTextViewText(R.id.widget_balance_text, "$****")
+                    e.printStackTrace()
                 }
-                
-                // Configurar el click listener para el ojo
-                val eyeIntent = Intent(context, InventoryWidgetProvider::class.java).apply {
-                    action = ACTION_TOGGLE_EYE
-                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                }
-                val eyePendingIntent = android.app.PendingIntent.getBroadcast(
-                    context,
-                    appWidgetId,
-                    eyeIntent,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-                )
-                views.setOnClickPendingIntent(R.id.widget_eye_icon, eyePendingIntent)
-
-                // Configurar el click listener para "Gestionar Inventario"
-                val appIntent = Intent(context, InventoryWidgetProvider::class.java).apply {
-                    action = ACTION_OPEN_APP
-                }
-                val appPendingIntent = android.app.PendingIntent.getBroadcast(
-                    context,
-                    appWidgetId + 1000,
-                    appIntent,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-                )
-                views.setOnClickPendingIntent(R.id.widget_manage_container, appPendingIntent)
-                
-                appWidgetManager.updateAppWidget(appWidgetId, views)
             }
         }
     }
