@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="280dp"
+    android:layout_width="match_parent"
     android:layout_height="180dp"
     android:background="@drawable/widget_background"
     android:padding="16dp">
@@ -44,7 +44,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="40dp" />
 
-    <!-- Ícono de ojo en parte superior derecha -->
+    <!-- Ícono de ojo en parte superior derecha (clickeable) -->
     <ImageView
         android:id="@+id/widget_eye_icon"
         android:layout_width="32dp"
@@ -54,7 +54,9 @@
         android:src="@drawable/ic_eye_open"
         android:contentDescription="@string/widget_eye_icon_description"
         android:scaleType="centerInside"
-        android:tint="@color/white" />
+        android:tint="@color/white"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackground" />
 
     <!-- Zona de saldo (con asteriscos por defecto) -->
     <FrameLayout
@@ -77,5 +79,38 @@
             android:fontFamily="monospace" />
 
     </FrameLayout>
+
+    <!-- Zona de "Gestionar Inventario" en la parte inferior derecha -->
+    <LinearLayout
+        android:id="@+id/widget_manage_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="?attr/selectableItemBackground">
+
+        <!-- Ícono de lápiz -->
+        <ImageView
+            android:id="@+id/widget_edit_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_edit_pencil"
+            android:contentDescription="@string/widget_edit_icon_description"
+            android:scaleType="centerInside"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Texto "Gestionar Inventario" -->
+        <TextView
+            android:id="@+id/widget_manage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_manage_inventory"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginEnd="8dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>
