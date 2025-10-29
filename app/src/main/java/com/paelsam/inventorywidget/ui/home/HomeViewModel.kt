@@ -23,8 +23,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val totalInventoryValue: LiveData<Double?>
     
     init {
-        val productDao = AppDatabase.getDatabase(application).productDao()
-        repository = ProductRepository(productDao)
+        repository = ProductRepository(application)
         
         // Convierte Flow a LiveData para observar en la UI
         allProducts = repository.allProducts.asLiveData()

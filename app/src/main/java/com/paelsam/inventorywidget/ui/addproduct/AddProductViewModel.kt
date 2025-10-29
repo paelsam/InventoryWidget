@@ -22,8 +22,7 @@ class AddProductViewModel(application: Application) : AndroidViewModel(applicati
     val saveResult: LiveData<SaveResult> = _saveResult
     
     init {
-        val productDao = AppDatabase.getDatabase(application).productDao()
-        repository = ProductRepository(productDao)
+        repository = ProductRepository(application)
     }
     
     /**

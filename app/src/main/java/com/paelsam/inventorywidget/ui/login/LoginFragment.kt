@@ -26,6 +26,8 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by viewModels {
         LoginViewModelFactory(requireActivity().application)
     }
+        LoginViewModelFactory(requireActivity().application)
+    }
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
