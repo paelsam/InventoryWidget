@@ -20,7 +20,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(requireActivity().application)
+    }
     private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
