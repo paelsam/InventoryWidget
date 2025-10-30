@@ -7,12 +7,15 @@ import android.content.Intent
 import android.widget.RemoteViews
 import com.paelsam.inventorywidget.R
 import com.paelsam.inventorywidget.data.repository.ProductRepository
+import com.paelsam.inventorywidget.ui.login.LoginFragment
 import com.paelsam.inventorywidget.view.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 class InventoryWidgetProvider : AppWidgetProvider() {
 
@@ -36,9 +39,9 @@ class InventoryWidgetProvider : AppWidgetProvider() {
                     toggleEyeState(context, appWidgetId)
                 }
             }
-            ACTION_OPEN_APP -> {
+            ACTION_OPEN_LOGIN -> {
                 val mainIntent = Intent(context, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 }
                 context.startActivity(mainIntent)
             }
@@ -59,7 +62,20 @@ class InventoryWidgetProvider : AppWidgetProvider() {
     companion object {
         private const val PREFS_NAME = "InventoryWidgetPrefs"
         private const val ACTION_TOGGLE_EYE = "com.paelsam.inventorywidget.TOGGLE_EYE"
-        private const val ACTION_OPEN_APP = "com.paelsam.inventorywidget.OPEN_APP"
+        private const val ACTION_OPEN_LOGIN = "com.paelsam.inventorywidget.OPEN_LOGIN"
+
+        /**
+         * Formatea el valor en formato moneda con separador de miles y dos decimales
+         * Ejemplo: 3326000.50 -> "$ 3.326.000,50"
+         */
+        private fun formatCurrency(value: Double): String {
+            val symbols = DecimalFormatSymbols().apply {
+                groupingSeparator = '.'
+                decimalSeparator = ','
+            }
+            val formatter = DecimalFormat("#,##0.00", symbols)
+            return "$ ${formatter.format(value)}"
+        }
 
         private fun updateAppWidget(
             context: Context,
@@ -91,9 +107,9 @@ class InventoryWidgetProvider : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.widget_eye_icon, eyePendingIntent)
 
-            // Configurar el click listener para "Gestionar Inventario"
+            // Configurar el click listener para "Gestionar Inventario" (Ícono de engranaje)
             val appIntent = Intent(context, InventoryWidgetProvider::class.java).apply {
-                action = ACTION_OPEN_APP
+                action = ACTION_OPEN_LOGIN
             }
             val appPendingIntent = android.app.PendingIntent.getBroadcast(
                 context,
@@ -103,12 +119,8 @@ class InventoryWidgetProvider : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.widget_manage_container, appPendingIntent)
 
-            // Actualizar el widget inmediatamente con la información inicial
-            if (eyeIsOpen) {
-                views.setTextViewText(R.id.widget_balance_text, "$****")
-            } else {
-                views.setTextViewText(R.id.widget_balance_text, "$****")
-            }
+            // Mostrar estado inicial (asteriscos)
+            views.setTextViewText(R.id.widget_balance_text, "$ ******")
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             // Cargar datos del inventario desde la base de datos en un hilo de fondo
@@ -120,19 +132,17 @@ class InventoryWidgetProvider : AppWidgetProvider() {
                             val totalInventory = repository.totalInventoryValue.first()
                             
                             // Actualizar el widget con el saldo o asteriscos basado en el estado del ojo
-                            if (eyeIsOpen) {
+                            val displayValue = if (eyeIsOpen) {
                                 if (totalInventory != null && totalInventory > 0) {
-                                    views.setTextViewText(
-                                        R.id.widget_balance_text,
-                                        String.format("$%.2f", totalInventory)
-                                    )
+                                    formatCurrency(totalInventory)
                                 } else {
-                                    views.setTextViewText(R.id.widget_balance_text, "$0.00")
+                                    "$ 0,00"
                                 }
                             } else {
-                                views.setTextViewText(R.id.widget_balance_text, "$****")
+                                "$ ******"
                             }
                             
+                            views.setTextViewText(R.id.widget_balance_text, displayValue)
                             appWidgetManager.updateAppWidget(appWidgetId, views)
                         } catch (e: Exception) {
                             e.printStackTrace()

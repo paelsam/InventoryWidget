@@ -1,7 +1,8 @@
 <resources>
-    <color name="primary_orange">#e7522e</color>
+    <color name="primary_orange">#FA8523</color>
     <color name="accent_orange">#FA8523</color>
-    <color name="dark_background">#CC000000</color>
+    <color name="dark_background">#1A1A1A</color>
+    <color name="widget_dark_background">#1F1F1F</color>
     <color name="toolbar_gray">#424242</color>
     <color name="white">#FFFFFF</color>
 </resources>

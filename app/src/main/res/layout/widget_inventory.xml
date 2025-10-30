@@ -1,105 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="160dp"
     android:background="@drawable/widget_background"
     android:padding="16dp">
 
-    <!-- Logo en parte superior izquierda -->
+    <!-- ZONA SUPERIOR IZQUIERDA: Ícono de inventario -->
     <ImageView
-        android:id="@+id/widget_logo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:id="@+id/widget_inventory_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/ic_launcher_round"
         android:contentDescription="@string/app_name"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"
+        android:tint="@color/white" />
 
-    <!-- Texto "Inventory" debajo del logo -->
-    <TextView
-        android:id="@+id/widget_inventory_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/widget_logo"
-        android:layout_alignStart="@id/widget_logo"
-        android:text="@string/widget_inventory_label"
-        android:textColor="@color/primary_orange"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="4dp" />
-
-    <!-- Texto "¿Cuánto tengo de inventario?" en parte superior derecha -->
-    <TextView
-        android:id="@+id/widget_question_text"
+    <!-- ZONA SUPERIOR CENTRO: Pregunta y ojo -->
+    <LinearLayout
+        android:id="@+id/widget_header_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/widget_inventory_icon"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@id/widget_logo"
-        android:text="@string/widget_question"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:gravity="end"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="40dp" />
+        android:layout_toStartOf="@id/widget_eye_icon"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical"
+        android:gravity="top|start">
 
-    <!-- Ícono de ojo en parte superior derecha (clickeable) -->
+        <!-- Texto: "¿Cuánto tengo de inventario?" -->
+        <TextView
+            android:id="@+id/widget_question_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_question"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:lineSpacingMultiplier="1.1" />
+
+    </LinearLayout>
+
+    <!-- ZONA SUPERIOR DERECHA: Ícono de ojo (clickeable) -->
     <ImageView
         android:id="@+id/widget_eye_icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_eye_open"
         android:contentDescription="@string/widget_eye_icon_description"
         android:scaleType="centerInside"
         android:tint="@color/white"
-        android:padding="8dp"
+        android:padding="6dp"
         android:background="?attr/selectableItemBackground" />
 
-    <!-- Zona de saldo (con asteriscos por defecto) -->
+    <!-- ZONA CENTRO-DERECHA: Saldo del inventario -->
     <FrameLayout
         android:id="@+id/widget_balance_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/widget_inventory_label"
-        android:layout_alignStart="@id/widget_inventory_label"
+        android:layout_below="@id/widget_header_layout"
         android:layout_toStartOf="@id/widget_eye_icon"
-        android:layout_marginTop="16dp">
+        android:layout_alignStart="@id/widget_header_layout"
+        android:layout_marginTop="12dp">
 
         <TextView
             android:id="@+id/widget_balance_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$****"
+            android:text="$ ******"
             android:textColor="@color/white"
-            android:textSize="24sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:fontFamily="monospace" />
+            android:fontFamily="monospace"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
     </FrameLayout>
 
-    <!-- Zona de "Gestionar Inventario" en la parte inferior derecha -->
+    <!-- ZONA INFERIOR IZQUIERDA: Etiqueta "Inventory" -->
+    <TextView
+        android:id="@+id/widget_inventory_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_balance_container"
+        android:layout_alignStart="@id/widget_inventory_icon"
+        android:text="@string/widget_inventory_label"
+        android:textColor="@color/primary_orange"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp" />
+
+    <!-- ZONA INFERIOR DERECHA: Texto "Gestionar Inventario" + Ícono de engranaje -->
     <LinearLayout
         android:id="@+id/widget_manage_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/widget_balance_container"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:layout_marginTop="8dp"
         android:background="?attr/selectableItemBackground">
-
-        <!-- Ícono de lápiz -->
-        <ImageView
-            android:id="@+id/widget_edit_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_edit_pencil"
-            android:contentDescription="@string/widget_edit_icon_description"
-            android:scaleType="centerInside"
-            android:layout_marginEnd="8dp" />
 
         <!-- Texto "Gestionar Inventario" -->
         <TextView
@@ -108,8 +112,18 @@
             android:layout_height="wrap_content"
             android:text="@string/widget_manage_inventory"
             android:textColor="@color/white"
-            android:textSize="12sp"
-            android:layout_marginEnd="8dp" />
+            android:textSize="11sp"
+            android:layout_marginEnd="6dp" />
+
+        <!-- Ícono de engranaje -->
+        <ImageView
+            android:id="@+id/widget_settings_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_settings_gear"
+            android:contentDescription="@string/widget_settings_icon_description"
+            android:scaleType="centerInside"
+            android:tint="@color/primary_orange" />
 
     </LinearLayout>
 
