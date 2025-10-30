@@ -55,6 +55,7 @@ class LoginFragment : Fragment() {
             speed = 3f
             playAnimation()
         }
+    }
     
     private fun setupBiometricAuthentication() {
         biometricPrompt = BiometricPrompt(this, executor,
@@ -140,4 +141,5 @@ class LoginFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+}
 }
