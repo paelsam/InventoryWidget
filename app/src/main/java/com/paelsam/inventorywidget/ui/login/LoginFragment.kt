@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.paelsam.inventorywidget.R
 import com.paelsam.inventorywidget.databinding.FragmentLoginBinding
+import java.util.concurrent.Executor
 
 /**
  * Fragment de Login con autenticación biométrica
@@ -26,11 +27,14 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by viewModels {
         LoginViewModelFactory(requireActivity().application)
     }
+    
+    private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
@@ -40,6 +44,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        executor = ContextCompat.getMainExecutor(requireContext())
         setupBiometricAuthentication()
         setupObservers()
         setupClickListeners()
@@ -49,14 +54,9 @@ class LoginFragment : Fragment() {
             setAnimationFromUrl("https://lottie.host/1379c6b3-7ea7-4608-97ee-c7a17792c9f2/goKfHQaaTy.lottie")
             speed = 3f
             playAnimation()
-    }
+        }
     
-    /**
-     * Configura la autenticación biométrica
-     */
     private fun setupBiometricAuthentication() {
-        val executor = ContextCompat.getMainExecutor(requireContext())
-        
         biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -81,29 +81,22 @@ class LoginFragment : Fragment() {
             .setNegativeButtonText("Cancelar")
             .build()
     }
-    
-    /**
-     * Configura los observadores del ViewModel
-     */
+
     private fun setupObservers() {
         viewModel.authenticationState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AuthenticationState.Unauthenticated -> {
                     binding.progressBar.visibility = View.GONE
-                    binding.btnAuthenticate.isEnabled = true
                 }
                 is AuthenticationState.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
-                    binding.btnAuthenticate.isEnabled = false
                 }
                 is AuthenticationState.Authenticated -> {
                     binding.progressBar.visibility = View.GONE
-                    // Navegar a la pantalla Home
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
                 is AuthenticationState.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    binding.btnAuthenticate.isEnabled = true
                 }
             }
         }
@@ -112,19 +105,13 @@ class LoginFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }
-    
-    /**
-     * Configura los listeners de los botones
-     */
+
     private fun setupClickListeners() {
-        binding.btnAuthenticate.setOnClickListener {
+        binding.animationView.setOnClickListener {
             checkBiometricSupport()
         }
     }
-    
-    /**
-     * Verifica si el dispositivo soporta biometría
-     */
+
     private fun checkBiometricSupport() {
         val biometricManager = BiometricManager.from(requireContext())
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
