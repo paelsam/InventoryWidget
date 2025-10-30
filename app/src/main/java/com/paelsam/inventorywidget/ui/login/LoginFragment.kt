@@ -44,8 +44,11 @@ class LoginFragment : Fragment() {
         setupObservers()
         setupClickListeners()
         
-        // Iniciar la animación Lottie si existe
-        binding.animationView.playAnimation()
+        // Configurar la animación Lottie
+        binding.animationView.apply {
+            setAnimationFromUrl("https://lottie.host/1379c6b3-7ea7-4608-97ee-c7a17792c9f2/goKfHQaaTy.lottie")
+            speed = 3f
+            playAnimation()
     }
     
     /**
@@ -73,8 +76,8 @@ class LoginFragment : Fragment() {
             })
 
         promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Autenticación Biométrica")
-            .setSubtitle("Inicia sesión con tu huella digital")
+            .setTitle("Autenticación con Biometría")
+            .setSubtitle("Ingrese su huella digital")
             .setNegativeButtonText("Cancelar")
             .build()
     }
